@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Los 15 de Daniela</title>
+  <link rel="stylesheet" href="css/estilos.css">
+</head>
+<body>
+  <div class="contenedor">
+    <h1>Confirmación de Asistencia</h1>
+    <p class="descripcion">
+      Por favor confirma tu asistencia al evento 💜
+    </p>
+
+    <form id="asistenciaForm" class="formulario">
+      <label for="nombre">Tu nombre:</label>
+      <input type="text" id="nombre" name="entry.1950251481" placeholder="Ej: Laura Gómez" required />
+
+      <button type="submit" class="boton">Sí, asistiré</button>
+    </form>
+
+    <p id="mensaje" class="hidden">🎉 ¡Gracias por confirmar! Redirigiendo al calendario...</p>
+  </div>
+
+  <script>
+    document.getElementById("asistenciaForm").addEventListener("submit", function (e) {
+      e.preventDefault();
+
+      const form = e.target;
+      const data = new FormData(form);
+
+      fetch("https://docs.google.com/forms/d/e/1FAIpQLScOGDzHANOjpzqVcVf9cXG_riMRcu1aT1TfVGRtt1h5-vtAVQ/formResponse", {
+        method: "POST",
+        mode: "no-cors",
+        body: data
+      })
+      .then(() => {
+        document.getElementById("mensaje").classList.remove("hidden");
+        form.reset();
+
+        // Espera breve y luego redirige al evento en Google Calendar
+        setTimeout(() => {
+          window.location.href =
+            "https://calendar.google.com/calendar/render?action=TEMPLATE&text=15+Años+de+Daniela&dates=20251123T230000Z/20251124T030000Z&details=Te+invitamos+a+celebrar+los+15+Años+de+Daniela+en+Suba+Porvenir&location=Suba+Porvenir,+Bogotá";
+        }, 1000);
+      })
+      .catch(() => {
+        alert("Ocurrió un error al enviar la confirmación. Intenta de nuevo.");
+      });
+    });
+  </script>
+</body>
+</html>
